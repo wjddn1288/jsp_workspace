@@ -4,7 +4,7 @@
 	
 	<insert id="insert" parameterType="Color">
 		insert into color(product_idx, color_name)
-		values(#{product.product_idx},#{color_name})
+		values(#{product.product_idx}, #{color_name})
 	</insert>
 	
 </mapper>

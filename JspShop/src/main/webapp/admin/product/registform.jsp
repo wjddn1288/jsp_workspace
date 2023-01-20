@@ -100,6 +100,7 @@
 		                  	<div class="row form-group" id="preview"></div>
 							<div class="form-group">
 	                    	<button type="button" class="btn btn-primary" id="bt_regist">등록</button>
+	                    	<button type="button" class="btn btn-primary" id="bt_list">목록</button>
 		                  	</div>
 	                  	</form>
 					</div>					
@@ -166,6 +167,7 @@
         $.each($("input[name='color']:checked"),function(){
         	colorCheckedArray.push($(this).val());
         });
+        formData.append("color[]",colorCheckedArray);
         
         formData.append("detail",$("#detail").val());
         
@@ -265,6 +267,10 @@
 
 			$("#bt_regist").click(function(){
 				regist();
+			});
+
+			$("#bt_regist").click(function(){
+				$(location).attr("href","/admin/product/list.jsp");
 			});
 			
 			$("#file").change(function(){

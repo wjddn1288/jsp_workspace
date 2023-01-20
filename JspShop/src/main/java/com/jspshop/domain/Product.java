@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Product {
-	private int product_idx;
+	private int product_idx; //0
 	//객체로 가져옴 mybatus에서 부모를 association 처리
 	private Category category;//어쏘세이션 1:1대로 가져올려고   
 	private String product_name;

@@ -5,11 +5,11 @@
 	<select id="selectAll" resultType="Category">
 		select * from category order by category_idx asc	
 	</select>
-	
-<!-- 		<select id="select" resultType="Category">
-		<![CDATA[
-			select * from Category 
+		
+		<!-- 상품Mapper에서 가져가제 하기 위한 쿼리문 -->
+		<select id="selectByProduct" resultType="Category" parameterType="int">
+			select * from Category	
 			where Category_idx=#{Category_idx}
-		]]> 
-	</select>	 -->
+	</select>	 
+	
 </mapper>

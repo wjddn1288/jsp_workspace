@@ -1,5 +1,8 @@
 package com.jspshop.repository;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 
 import com.jspshop.domain.Product;
@@ -14,7 +17,7 @@ public class ProductDAO { // 누군가 올릴때 같이 올라감 sql세션
 	}
 
 	//throws 는 예외를 처리하는게 아니라, 회피하는 것이다. 즉 전가시키는 것이다.
-	public int insert(Product product) throws ProductException{
+	public void insert(Product product) throws ProductException{
 		int result = 0;
 		System.out.println("Mybatis 만나기전에 product_idx="+product.getProduct_idx());
 		result=sqlSession.insert("Product.insert", product);
@@ -24,6 +27,10 @@ public class ProductDAO { // 누군가 올릴때 같이 올라감 sql세션
 			throw new ProductException("상품이 등록되지 않았어요");
 			//강요되지 않아서 빨간줄이 안감
 		}
-		return result;
 	}
+	
+	public List selectAll(Map map) {
+		return sqlSession.selectList("Product.selectAll", map);
+	}
+	
 }

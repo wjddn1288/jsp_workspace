@@ -1,3 +1,12 @@
+<%@page import="com.jspshop.exception.PimgException"%>
+<%@page import="com.jspshop.exception.ColorException"%>
+<%@page import="com.jspshop.exception.PsizeException"%>
+<%@page import="com.jspshop.repository.PimgDAO"%>
+<%@page import="com.jspshop.repository.PsizeDAO"%>
+<%@page import="com.jspshop.repository.ColorDAO"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.jspshop.util.MessageObject"%>
+<%@page import="com.jspshop.exception.ProductException"%>
 <%@page import="org.apache.ibatis.session.SqlSession"%>
 <%@page import="com.jspshop.mybatis.MybatisConfig"%>
 <%@page import="com.jspshop.repository.ProductDAO"%>
@@ -16,15 +25,18 @@
 <%@ page contentType="application;json=UTF-8"%>
 <%!
 	ProductDAO productDAO=new ProductDAO();
-	MybatisConfig mybatis=MybatisConfig.getInstance();
+	PsizeDAO psizeDAO=new PsizeDAO();
+	ColorDAO colorDAO=new ColorDAO();
+	PimgDAO pimgDAO=new PimgDAO();
+	
+	MybatisConfig mybatisConfig=MybatisConfig.getInstance();
 %>
 <%
 	int maxSize=5*(1024*1024); //5MB
 	String path="/data/"; 
 	// 선언부에서는 서비스메서드 영역이 아니라서 내장객체를 쓸 수 없다.
 	// 멤버변수라서 메모리에 올릴수 없다.
-%>
-<% 
+
 	//설정정보를 가진 객체 //어디에 지정할지 크기를 결정할수 있다!!
 	DiskFileItemFactory factory=new DiskFileItemFactory(); //새로 만들기
 
@@ -85,22 +97,22 @@
             	for(int i=0; i<psize.length; i++ ){
             		//String size : psize
             		Psize psizeobj = new Psize(); //empty DTO
-            		psizeobj.setProduct(product); //어떤 상품에 소속된 사이즈인지
+            		psizeobj.setProduct(product); //어떤 상품에 소속된 사이즈인지 (핵심)
             		psizeobj.setPsize_name(psize[i]); //XL,L,M
             		
             		psizeList.add(psizeobj); //저 위에 리스트에 추가
             	}
             	
             }else if(item.getFieldName().equals("color[]")){ //색상인지
-				String[] colorArray=item.getString("utf-8").split(",");
-				for(int i=0; i<colorArray.length; i++){
-					//String color_name : color
-            		Color obj = new Color(); //empty DTO
-            		obj.setProduct(product); //어떤 상품에 소속된 사이즈인지
-            		obj.setColor_name(colorArray[i]); //XL,L,M
-            		
-            		colorList.add(obj); //저 위에 리스트에 추가
-            	}
+            	String[] color=item.getString("utf-8").split(",");
+            	System.out.println("색상 : " +item.getString("utf-8"));
+				for(int i=0;i<color.length;i++){
+					Color colorObj = new Color();//empty
+					colorObj.setProduct(product);//어떤 상품에 소속된 색상인지
+					colorObj.setColor_name(color[i]); 
+					
+					colorList.add(colorObj);//DTO를 저 위에 리스트에 추가
+				}				
 				
             }else if(item.getFieldName().equals("detail")){ //상세내용인지
 				product.setDetail(item.getString("utf-8"));
@@ -123,15 +135,69 @@
         }
 	}
 	
-	//최종적으로 채워진 Product를 확인해보자!!
-	//System.out.println(product);
-	SqlSession sqlSession= mybatis.getSqlSession();
+	SqlSession sqlSession= mybatisConfig.getSqlSession();
 	
 	//얻어진 SqlSession을 해당 DAO에게 전달..
-	productDAO.setSqlSession(sqlSession);
-	productDAO.insert(product);
 	
-	sqlSession.commit();
+	//상품등록 트랜잭션은 총 4개의 DML로 이루어져있다
+	
+	MessageObject messageObject=new MessageObject();
+	
+	try{
+		// 세부업무1 : Product 테이블에 넣기
+		//try,catch 안잡으면 개발자 손해
+		productDAO.setSqlSession(sqlSession);//주입
+		productDAO.insert(product);
+	
+		//세부업무2: Psize 테이블에 넣기
+		psizeDAO.setSqlSession(sqlSession); //주입
+		//유저가 체크한 사이즈 수만큼...
+		for(Psize psize : product.getPsizeList() ){ 
+			psizeDAO.insert(psize);
+		}				
+		
+		//세부업무3: Color 테이블에 넣기
+		colorDAO.setSqlSession(sqlSession); //주입
+		//유저가 체크한 사이즈 수만큼... (반환형 : 얼만큼)
+		for(Color color : product.getColorList() ){
+			colorDAO.insert(color);
+		}
+		
+		//세부업무4: Pimg 테이블에 넣기
+		pimgDAO.setSqlSession(sqlSession);//주입
+		for(Pimg pimg : product.getPimgList()){
+			pimgDAO.insert(pimg);
+		}
+		
+		sqlSession.commit();
+		messageObject.setCode(1);
+		messageObject.setMsg("상품등록 완료");
+	}catch(ProductException e){
+		sqlSession.rollback();		
+		messageObject.setCode(0);
+		messageObject.setMsg(e.getMessage());
+	}catch(PsizeException e){
+		sqlSession.rollback();		
+		messageObject.setCode(0);
+		messageObject.setMsg(e.getMessage());
+	}catch(ColorException e){
+		sqlSession.rollback();
+		messageObject.setCode(0);
+		messageObject.setMsg(e.getMessage());
+	}catch(PimgException e){
+		sqlSession.rollback();		
+		messageObject.setCode(0);
+		messageObject.setMsg(e.getMessage());
+	}finally{
+		mybatisConfig.release(sqlSession);
+	}
+	
+	//응답정보 보내기(응답정보를 json으로 변환)
+	Gson gson=new Gson();
+	String json=gson.toJson(messageObject);
+	
+	out.print(json);
+	
 %>
 
 
