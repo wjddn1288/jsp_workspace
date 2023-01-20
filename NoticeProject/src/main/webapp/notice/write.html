@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">   <!-- 추가해줌!!-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+
+        input[type=button] {
+            background-color: #04AA6D;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=button]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+    </style>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+    <script>
+        //js를 좀 더 단순하게 사용할 순 없나?-> jquery..가 출시됨(2006년 소개)
+        window.addEventListener("load",function(){
+            //ckeditor 구현
+            ClassicEditor.create( document.querySelector( '#content ' ) ).catch( error => { //체이닝 기법 한줄로 연결되어있는거임!!
+            console.error( error );
+        } );
+
+            let bt=document.querySelector("input[type=button]");
+            bt.addEventListener("click",function(){
+               console.log("눌렀어?");
+               //서버에 파라미터 전송하기
+               //content의 데이터 양이 많으므로 body에 실어 보내야 하기 때문에
+               //post 방식으로 전송하자!! post로 전송하려면  form 태그를 이용하여 전송해야한다.
+               let form=document.querySelector("form");
+               //서버로 전송하기 위해서 필수적인 속성
+               //1) 서버의 주소 
+               //2) 전송방법(post,get..등 spring할때 더 배움)
+               form.submit(); //전송!!
+
+            });
+       });
+    </script>
+</head>
+
+<body>
+
+    <h3>Contact Form</h3>
+
+    <div class="container">
+        <!--HTML 방식|| /를 맨 앞에 넣으면 절대경로(server.xml에서 내가 알려준곳으로 찾아가라) /안넣으면 상대경로(현재위치에서 찾아라)로 지정됨-->
+         <form method="post" action="/notice/regist"> 
+            <label for="fname">제목</label>
+            <input type="text" id="fname" name="title" placeholder="Your name..">
+
+            <label for="lname">작성자</label>
+            <input type="text" id="lname" name="writer" placeholder="Your last name..">
+
+            <label for="subject">내용2</label>
+            <textarea id="content" name="content" placeholder="Write something.." style="height:200px"></textarea>
+
+            <!-- submit 은 현재 form태그의 내용을 주소도 모르고 무조건 전송을 방지하기 위할 일반 버튼 -->
+            <input type="button" value="Submit">
+        </form>
+    </div>
+
+</body>
+
+</html>

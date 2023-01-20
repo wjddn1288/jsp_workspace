@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	function Row(props){
+		return(
+			<tr>
+			</tr>
+		);
+	}
+</script>
+
+<script type="text/javascript">
+
+function getDeptList(){
+	$.ajax({ //여러값이 와야되니까 JSON으로 표시하자!!
+		"type":"get", //method 대신 타입으로 적어놨음 그 아저씨가 그렇게 만듬
+		"url":"/notice/dept_list.jsp", //action 대신 url
+		success:function(result,status,xhr){  //익명함수, 요청이 성공했을때
+			let deptList=JSON.parse(result); //문자열을--> json객체로 
+			createDeptOption(deptList); //부서 옵션 만들기
+		}
+	});
+}
+
+function createTable(noticeList){
+	let tag="";
+	
+	for(let i=0; i<empList.length; i++){
+		let rec=recList[i];
+		
+		tag+="<tr>";
+		tag+="<td>"+rec.title+"</td>"; 
+		tag+="<td>"+rec.writer+"</td>"; 
+		tag+="<td>"+rec.contend+"</td>"; 
+		tag+="<td>"+rec.regdate.substring(0,10)+"</td>"; 
+		tag+="<td>"+rec.hit+"</td>"; 
+		tag+="</tr>";		
+	}
+	$("#tbody").html(tag);
+}
+
+function regist(){
+	$.ajax({
+		"type" :"get",
+		"url" : "notice/list.jsp",
+		success:function(result,status,xhr){
+		let deptList=JSON.parse(result); //문자열을--> json객체로 
+		createDeptOption(deptList); //부서 옵션 만들기
+		}
+	});
+}
+
+	$(function(){
+		$("bt_regist").click(function(){
+			regist();
+		});
+	});    
+</script>
+</head>
+
+<body>
+<div class="container">
+	<div class="row m-3">
+		<div class="col-md-3 border">
+			<div class="form-group mt-2">
+				<input type="text" class="form-group" id="title" placeholder="제목..">
+			</div>
+			<div class="form-group mt-2">
+				<input type="text" class="form-group" id="writer" placeholder="작성자..">
+			</div>
+			<div class="form-group mt-2">
+				<input type="text" class="form-group" id="content" placeholder="텍스트입력..">
+			</div>
+			<div class="form-group mt-2">
+				<button id="bt_regist" type="button" class="form-group">ok</button>
+			</div>	
+		</div>
+		
+		<div class="col-md-6 border">
+		  <table class="table">
+		    <thead class="thead-dark">
+		      <tr>
+		        <th value="num">No</th>
+		        <th value="title">title</th>
+		        <th value="writer">writer</th>
+		        <th value="regdate">regdate</th>
+		        <th value="hit" >hit</th>
+		      </tr>
+		    </thead>
+		    <tbody id="tbody">
+		      <tr>
+		        <td>John</td>
+		        <td>Doe</td>
+		        <td>john@example.com</td>
+		      </tr>
+		    </tbody>
+		  </table>		
+		</div>
+		
+		<div class="col-md-3 border">
+			<div class="form-group2 mt-2">
+				<input type="text" class="form-group2" id="title2" placeholder="제목..">
+			</div>
+			<div class="form-group2 mt-2">
+				<input type="text" class="form-group2" id="writer2" placeholder="작성자..">
+			</div>
+			<div class="form-group2 mt-2">
+				<input type="text" class="form-group2" id="content2" placeholder="텍스트입력..">
+			</div>
+			<div class="form-group2 mt-2">
+				<button id="bt_update" type="button" class="form-group2 mt-2">수정</button>
+				<button id="bt_delete" type="button" class="form-group2 mt-2">삭제</button>
+			</div>	
+		</div>
+	</div>
+</body>
+</html>

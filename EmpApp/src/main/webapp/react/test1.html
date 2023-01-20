@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!--JSX : Javascript XML : JS코드 안에 html 태그 작성이 가능하도록 지원함-->
+    <script type="text/babel">
+        //UI 컴포넌트를 정의한다! 게시판 테이블에 주로 활용한다!
+        //UI 컴포넌트는 재사용할 태그를 반드시 반환해야 한다.
+        //개발자는 UI컴포넌트를 정의하면, 마치 사용자 정의태그처럼
+        //재사용이 가능하다. 
+        function Hi() {
+            return ( //원칙! 리턴의 대상은 무조건 하나여야댐(싱글)! 아니면 특정태그에 감싸야함!
+                <div> 
+                    <h1>리엑트시작1{1+9}</h1>
+                    <h2>리엑트시작2</h2>
+                </div>
+            ); //2줄이상이 되면 반드시 소괄호로 묶어줘야댐!!
+                //1+9는 문자취급이니까 (연산자) 중괄호로 묶어줘야댐!
+        }
+        //최신버전에서는 더이상 지원하지 않음
+        //ReactDOM.render(<Hi/>,document.getElementById("container")); //(어떤 태그를(내가만든태그), 어디에)
+
+        //createRoot() 방식으로 바뀜!!
+        let root = ReactDOM.createRoot(document.getElementById("container")); //루트가 될 녀석
+        root.render(<Hi/>); //화면에 그랙픽처리(표현) 
+
+    </script>
+</head>
+<body>
+    <div id="container">
+
+    </div>
+</body>
+</html>

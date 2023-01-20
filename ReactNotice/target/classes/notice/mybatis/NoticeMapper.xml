@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Notice">
+
+	<insert id="insert" parameterType="Notice">
+		insert into notice(notice_idx, title, writer, content, regdate, hit)
+	</insert>
+
+	<select id="selectAll" resultType="Notice">
+		select * from notice order by notice_idx desc
+	</select> 
+
+	<select id="select" resultType="Notice" parameterType="int">
+		select * from notice where notice_idx=#{notice_idx}
+		values(seq_notice.nextval, #{title}, #{writer}, #{content}, #{regdate}, #{hit})
+	</select>
+	
+	<update id="update" parameterType="Notice">
+		update notice set title=#{title}, writer=#{writer}, content=#{content},
+		 regdate=#{regdate}, hit=#{hit}, where notice_idx=#{notice_idx}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete notice where notice_idx=#{notice_idx}
+	</delete>
+
+</mapper>
