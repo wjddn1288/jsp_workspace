@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="com.jspshop.util.PageManager"%>
 <%@page import="org.apache.ibatis.session.SqlSession"%>
 <%@page import="com.jspshop.mybatis.MybatisConfig"%>
@@ -16,8 +17,22 @@
     SqlSession sqlSession= mybatisConfig.getSqlSession();
     productDAO.setSqlSession(sqlSession);
 
-    List<Product> productList= productDAO.selectAll();
-
+    //만일 사용자가 검색기능을 이용하여 파라미터를 넘기면, 그 파라미터값을 
+    //맵에 채워서 selectAll() 호출하자!
+    String category=request.getParameter("category");
+    String keyword=request.getParameter("keyword");
+    HashMap<String , String> map= new HashMap<String, String>();
+    map.put("category", category);//카테고리 , 사용자가 선택한 select박스의 값
+    map.put("category", keyword);//키워드 , 사용자가 입력한 키워드 텍스트박스의 값
+    
+    List<Product> productList=null; //if문 지역변수가 되니까 뺴줌!
+    
+    if(keyword!=null){ //검색이라면.. 키워드가 넘어옴
+    	productList =productDAO.selectBySearch(map);
+    }else{
+    	productList =productDAO.selectAll();
+    }
+    
     pm.init(productList, request); //페이징 계산 맡기기
 %>
 <!DOCTYPE html>
@@ -75,15 +90,16 @@
 		        <h3 class="card-title">Responsive Hover Table</h3>
 		
 		        <div class="card-tools">
-		            <div class="input-group input-group-sm" style="width: 350px;">
-		            	<select class="form-control">
-		            		<option>상품명</option>
-		            		<option>브랜드</option>
-		            	</select>
-		                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-		
+	            	<form id="form1">
+	          		  <div class="input-group input-group-sm" style="width: 350px;">
+			            	<select class="form-control" name="category">
+			            		<option value="product_name">상품명</option>
+			            		<option value="brand">브랜드</option>
+			            	</select>
+			                <input type="text" name="keyword" class="form-control float-right" placeholder="Search">
+						</form>
 		                <div class="input-group-append">
-		                    <button type="submit" class="btn btn-default">
+		                    <button type="button" class="btn btn-default" id="bt_search">
 		                        <i class="fas fa-search"></i>
 		                    </button>
 		                </div>
@@ -144,7 +160,22 @@
 	</div>
 	<!-- ./wrapper -->
 	<%@ include file="/admin/inc/footer_link.jsp" %>
-
+	<script type="text/javascript">
+	
+	function getListBySearch(){
+		//폼을 전송하자()
+		$("#from1").attr({
+			action:"/admin/product/list.jsp",
+			method:""
+		});
+		$("#form1").submit;
+	}
+		$(function(){
+			$("#bt_search").click(function(){
+				getListBySearch();
+			});
+		});
+	</script>
 </body>
 </html>
 

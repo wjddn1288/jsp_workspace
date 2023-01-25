@@ -7,4 +7,9 @@
 		values(#{product.product_idx}, #{color_name})
 	</insert>
 	
+	<select id="selectByProduct" resultType="Color" parameterType="int">
+		select * from color
+		where product_idx=#{product_idx}
+	</select>
+	
 </mapper>
