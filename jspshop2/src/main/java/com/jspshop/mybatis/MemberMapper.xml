@@ -6,11 +6,8 @@
 		select * from member order by member_idx asc
 	</select>
 	
-	<select id="select" 
-		parameterType="Member" 
-		resultType="Member">
-		select * from member
-		where id=#{id} and pass=#{pass}
+	<select id="select" parameterType="Member" resultType="Member">
+		select * from member where id=#{id} and pass=#{pass}
 	</select>
 	
 	<insert id="insert" parameterType="Member">
