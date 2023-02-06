@@ -1,0 +1,42 @@
+#dispatcherServlet if문을 대체할려고 쓰는 방법임!!
+#이 파일 형식이 xml문서였다면, xml 파서를 이용하면 되고 
+#이 파일 형식이 json형식으로 저장된 파일이라면, JSON파서를 이용하면되고
+#이 파일 형식이 key-value의 쌍인 map으로 되어 있으므로, Properties 객체 이용
+#(스프링 창시자는 이 파일을 xml로 구현, 우리도 기초마치고 다음주부터 따라함!!)
+#Properties 란 자바 java.util 패키지에 들어있는 객체 중 map의 하위객체이다.
+#특히 이 객체는 읽어들인 대상 데이터가 key-value의 쌍으로 이루어진 경우 해석 능력이 있다.
+
+#컨트롤러 매핑
+/blood.do=com.mvc3.controller.BloodController
+/movie.do=com.mvc3.controller.MovieController
+
+#게시판관련
+/board/list.do=com.mvc3.controller.board.ListController
+/board/regist.do=com.mvc3.controller.board.RegistController
+/board/detail.do=com.mvc3.controller.board.DetailController
+/board/delete.do=com.mvc3.controller.board.DeleteController
+/board/update.do=com.mvc3.controller.board.UpdateController
+/board/edit.do=com.mvc3.controller.board.EditController
+
+#뷰 매핑
+/blood/view=/blood/result.jsp
+/movie/view=/movie/result.jsp
+/board/view/list=/board/list.jsp
+/board/view/regist=/board/list.do
+/board/view/detail=/board/detail.jsp
+/board/view/delete=/board/list.do
+/board/view/update=/board/detail.jsp
+
+
+
+
+
+
+
+
+
+
+
+
+
+

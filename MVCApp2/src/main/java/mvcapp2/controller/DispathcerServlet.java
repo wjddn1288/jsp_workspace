@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 //어플리케이션의 모든 요청을 혼자 다 받아서, 보다 전문적인 하위 컨트롤러에 
 //전달하기 위한 진입점 클래스
 //이 클래스의 존재가 없을 경우, 하위 모든 컨트롤러들은 직접 서블릿으로 정의하여
-//수많은 매핑이 필요하게 되고,(일관성도 없어짐) 각 컨트롤러간의 일관성도 없어서 
+//수많은 매핑이 필요하게 되고, 각 컨트롤러간의 일관성도 없어서 
 //유지보수성이 오히려 힘들어짐
 public class DispathcerServlet extends HttpServlet {
 
