@@ -2,8 +2,6 @@ package news.util;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.Data;
 
 //페이징 처리 계산을 담당하는 객체

@@ -28,6 +28,7 @@ public class EditController implements Controller{
 		boardDAO.update(board);
 		
 		//4단계
+		//입력폼에서 날라온 DTO
 		request.setAttribute("board", board); //수정 dto 저장
 		
 		sqlSession.commit();

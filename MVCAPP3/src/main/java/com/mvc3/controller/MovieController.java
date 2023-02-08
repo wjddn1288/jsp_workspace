@@ -29,4 +29,9 @@ public class MovieController implements Controller { //컨트롤러의 자식 is
 	public String getViewName() {
 		return "/movie/view";
 	}
+
+	@Override
+	public boolean isForward() {
+		return false;
+	}
 }

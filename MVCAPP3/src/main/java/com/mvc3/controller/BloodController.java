@@ -31,4 +31,9 @@ public class BloodController implements Controller { //컨트롤러의 자식 is
 	public String getViewName() {
 		return "/blood/view";
 	}
+
+	@Override
+	public boolean isForward() {
+		return false;
+	}
 }
